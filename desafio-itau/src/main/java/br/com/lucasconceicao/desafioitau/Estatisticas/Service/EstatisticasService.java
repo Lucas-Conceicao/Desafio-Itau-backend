@@ -16,12 +16,16 @@ public class EstatisticasService {
     @Autowired
     private TransacaoService transacaoService;
 
-    public Estatisticas setEstatisticas(OffsetDateTime tempoMin){
-        List<Transacao> listaFiltrada = filtrarLista(tempoMin);
+    public Estatisticas setEstatisticas(List<Transacao> listaFiltrada){
         if(listaFiltrada.isEmpty())
             return new Estatisticas(0l,0.0,0.0,0.0,0.0);
     
-        return new Estatisticas(setCount(listaFiltrada),setSum(listaFiltrada),setAvg(listaFiltrada),setMax(listaFiltrada),setMin(listaFiltrada));
+        return new Estatisticas(
+            setCount(listaFiltrada),
+            setSum(listaFiltrada),
+            setAvg(listaFiltrada),
+            setMin(listaFiltrada),
+            setMax(listaFiltrada));
     }
 
     public Long setCount(List<Transacao> lista){
@@ -52,22 +56,21 @@ public class EstatisticasService {
     }
 
     public Double setMax(List<Transacao> lista){
-        Double max = lista.get(0).getValor();
+        Double max = 0.0;
 
-        for(int x = 1; x < lista.size(); x++){
-            if(lista.get(x).getValor() > max)
-                max = lista.get(x).getValor();
-        }
+        for(Transacao t : lista)
+            if(t.getValor() > max)
+                max = t.getValor();
         return max;
     }
 
     public Double setMin(List<Transacao> lista){
-        Double min = lista.get(0).getValor();
+        Double min = null;
 
-        for(int x = 1; x < lista.size(); x++){
-            if(min > lista.get(x).getValor())
-                min = lista.get(x).getValor();
-        }
+        for(Transacao t : lista)
+            if(min == null || t.getValor() < min)
+                min = t.getValor();
+        
         return min;
     }
 

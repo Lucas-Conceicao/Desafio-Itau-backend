@@ -26,6 +26,6 @@ public class EstatisticaController {
     public ResponseEntity<Estatisticas> mostrarEstatisticas(){
         OffsetDateTime tempoMin = OffsetDateTime.now().minusSeconds(tempoLimiteEmSegundos);
         log.info("mostrando estatisticas");
-        return ResponseEntity.ok(estatisticasService.setEstatisticas(tempoMin));
+        return ResponseEntity.ok(estatisticasService.setEstatisticas(estatisticasService.filtrarLista(tempoMin)));
     }
 }

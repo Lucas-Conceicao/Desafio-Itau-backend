@@ -22,17 +22,22 @@ public class TransacaoController {
         log.info("lançando transação");
         try{
         transacaoservice.salvar(transacao);
+        log.info("Transação salva com sucesso");
         return ResponseEntity.status(HttpStatus.CREATED).build();
         }catch(IllegalArgumentException e){
+            log.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }catch(Exception e){
+            log.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @DeleteMapping
     public ResponseEntity deletarTransacoes(){
+        log.info("Apagando transações");
         transacaoservice.deletar();
+        log.info("Transações apagadas com sucesso");
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
