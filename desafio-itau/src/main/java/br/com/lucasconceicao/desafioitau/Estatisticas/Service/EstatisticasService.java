@@ -4,28 +4,39 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.lucasconceicao.desafioitau.Estatisticas.Model.Estatisticas;
 import br.com.lucasconceicao.desafioitau.Transacao.Model.Transacao;
-import br.com.lucasconceicao.desafioitau.Transacao.Service.TransacaoService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class EstatisticasService {
-    @Autowired
-    private TransacaoService transacaoService;
 
     public Estatisticas setEstatisticas(List<Transacao> listaFiltrada){
-        if(listaFiltrada.isEmpty())
+        if(listaFiltrada.isEmpty()){
+            log.info("Retornando estatisticas zeradas para lista vazia");
             return new Estatisticas(0l,0.0,0.0,0.0,0.0);
-    
+        }
+        log.info("Retornado as estatisticas das {} transações", listaFiltrada.size());
         return new Estatisticas(
             setCount(listaFiltrada),
             setSum(listaFiltrada),
             setAvg(listaFiltrada),
             setMin(listaFiltrada),
             setMax(listaFiltrada));
+    }
+
+    public List<Transacao> filtrarLista(OffsetDateTime tempoMin, List<Transacao> lista){
+        log.info("Iniciando filtragem de {} transações para o período após {}", lista.size(), tempoMin);
+        List<Transacao> listaFiltrada = new ArrayList<>();
+        for(Transacao t : lista){
+            if(t.getDataHora().isEqual(tempoMin) || t.getDataHora().isAfter(tempoMin))
+                listaFiltrada.add(t);
+        }
+        log.info("Filtragem concluída. {} transações restantes.", listaFiltrada.size());
+        return listaFiltrada;
     }
 
     public Long setCount(List<Transacao> lista){
@@ -74,14 +85,4 @@ public class EstatisticasService {
         return min;
     }
 
-    public List<Transacao> filtrarLista(OffsetDateTime tempoMin){
-        List<Transacao> lista = transacaoService.getListaTransacao();
-        List<Transacao> listaFiltrada = new ArrayList<>();
-
-        for(Transacao t : lista){
-            if(t.getDataHora().isAfter(tempoMin))
-                listaFiltrada.add(t);
-        }
-        return listaFiltrada;
-    }
 }

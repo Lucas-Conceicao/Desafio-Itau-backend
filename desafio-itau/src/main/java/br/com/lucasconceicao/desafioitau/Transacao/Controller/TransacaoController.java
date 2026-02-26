@@ -18,26 +18,25 @@ public class TransacaoController {
     private TransacaoService transacaoservice;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Transacao> salvar(@RequestBody Transacao transacao){
+    public ResponseEntity<Transacao> salvarTransacao(@RequestBody Transacao transacao){
         log.info("lançando transação");
         try{
         transacaoservice.salvar(transacao);
         log.info("Transação salva com sucesso");
         return ResponseEntity.status(HttpStatus.CREATED).build();
         }catch(IllegalArgumentException e){
-            log.info(e.getMessage());
+            log.warn("Tentativa de transação inválida: {}",e.getMessage());
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }catch(Exception e){
-            log.info(e.getMessage());
+            log.error("Erro inesperado ao tentar processar a transação: {}",e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @DeleteMapping
     public ResponseEntity deletarTransacoes(){
-        log.info("Apagando transações");
         transacaoservice.deletar();
-        log.info("Transações apagadas com sucesso");
+        log.info("Limpeza de transações solicitada. Todos os dados foram apagados.");
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

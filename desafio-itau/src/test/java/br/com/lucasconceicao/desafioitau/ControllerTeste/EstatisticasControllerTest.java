@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,7 @@ import br.com.lucasconceicao.desafioitau.Estatisticas.Model.Estatisticas;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DisplayName("Testes da classe EstatisticasController")
 public class EstatisticasControllerTest {
     
     @Autowired
@@ -25,7 +27,8 @@ public class EstatisticasControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void retornaOkQuandoEstatisticasApresentadas() throws Exception{
+    @DisplayName("Deve mostrar as estatisticas corretamente")
+    void mostrarEstatisticas_retornaOkQuandoEstatisticasApresentadas() throws Exception{
         Estatisticas estatisticas = new Estatisticas(10l,5436.0,1977.0,500.0,700.00);
         String json = objectMapper.writeValueAsString(estatisticas);
 
