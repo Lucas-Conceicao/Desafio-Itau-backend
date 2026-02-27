@@ -15,17 +15,22 @@ import lombok.extern.slf4j.Slf4j;
 public class EstatisticasService {
 
     public Estatisticas setEstatisticas(List<Transacao> listaFiltrada){
+        Long inicio = System.nanoTime();
         if(listaFiltrada.isEmpty()){
             log.info("Retornando estatisticas zeradas para lista vazia");
             return new Estatisticas(0l,0.0,0.0,0.0,0.0);
         }
         log.info("Retornado as estatisticas das {} transações", listaFiltrada.size());
-        return new Estatisticas(
+        Estatisticas resultado = new Estatisticas(
             setCount(listaFiltrada),
             setSum(listaFiltrada),
             setAvg(listaFiltrada),
             setMin(listaFiltrada),
             setMax(listaFiltrada));
+        Long fim = System.nanoTime();
+        Long tempoExecucao = fim - inicio;
+        log.info("Tempo para calcular as estatisticas em nanosegundos: {}", tempoExecucao);
+        return resultado;
     }
 
     public List<Transacao> filtrarLista(OffsetDateTime tempoMin, List<Transacao> lista){
