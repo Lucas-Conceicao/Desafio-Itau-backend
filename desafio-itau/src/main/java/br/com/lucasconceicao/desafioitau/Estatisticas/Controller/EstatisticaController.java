@@ -14,6 +14,7 @@ import br.com.lucasconceicao.desafioitau.Estatisticas.Model.Estatisticas;
 import br.com.lucasconceicao.desafioitau.Estatisticas.Service.EstatisticasService;
 import br.com.lucasconceicao.desafioitau.Transacao.Service.TransacaoService;
 import br.com.lucasconceicao.desafioitau.Transacao.Model.Transacao;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -26,14 +27,15 @@ public class EstatisticaController {
     @Autowired
     private TransacaoService transacaoService;
     
-    private Integer tempoLimiteEmSegundos = 60; //setar o tempo limite em segundos
+    @Value("${app.estatisticas.tempo-limite}")
+    private Integer tempoLimiteEmSegundos;
     
     @GetMapping
     public ResponseEntity<Estatisticas> mostrarEstatisticas(){
         OffsetDateTime tempoMin = OffsetDateTime.now().minusSeconds(tempoLimiteEmSegundos);
         log.info("mostrando estatisticas");
-        List<Transacao> listafiltrada = estatisticasService.filtrarLista(tempoMin, transacaoService.getListaTransacao());
-        Estatisticas estatisticas = estatisticasService.setEstatisticas(listafiltrada);
+        List<Transacao> lista = transacaoService.getListaTransacao();
+        Estatisticas estatisticas = estatisticasService.setEstatisticas(lista, tempoMin);
         return ResponseEntity.ok(estatisticas);
     }
 }

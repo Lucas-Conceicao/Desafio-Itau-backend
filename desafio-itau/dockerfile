@@ -1,0 +1,23 @@
+#imagem com o java 21 e o maven
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+
+WORKDIR /app
+
+COPY . .
+
+#ignorar os testes para ser mais rápido
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+#Copia do arquivo .jar que foi gerado no passo para nova imagem
+#(*) para pegar o arquivo independente do nome exato
+COPY --from=build /app/target/*.jar app.jar
+
+#Porta a ser usada 8080
+EXPOSE 8080
+
+#Ligação da aplicação quando o container inicia
+ENTRYPOINT ["java", "-jar", "app.jar"]

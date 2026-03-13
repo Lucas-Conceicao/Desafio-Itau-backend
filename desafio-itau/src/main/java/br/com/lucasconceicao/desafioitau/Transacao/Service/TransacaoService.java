@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -15,13 +16,13 @@ public class TransacaoService {
     private List<Transacao> listaTransacao;
 
     public TransacaoService() {
-        listaTransacao = new ArrayList<>();
+        this.listaTransacao = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void salvar(Transacao transacao){
-        if(transacao.getValor() == null || 0.0 > transacao.getValor()) 
+        if(transacao.valor() == null || 0.0 > transacao.valor()) 
             throw new IllegalArgumentException("Valor inválido!");
-        if(transacao.getDataHora() == null || transacao.getDataHora().isAfter(OffsetDateTime.now()))
+        if(transacao.dataHora() == null || transacao.dataHora().isAfter(OffsetDateTime.now()))
             throw new IllegalArgumentException("Data inválida!");
         listaTransacao.add(transacao);
     }
