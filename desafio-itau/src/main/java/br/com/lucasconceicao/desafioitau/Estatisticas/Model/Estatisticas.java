@@ -7,7 +7,7 @@ public record Estatisticas (long count, double sum, double avg, double min, doub
         this(
             stats.getCount(),
             stats.getSum(),
-            stats.getCount() == 0 ? 0.0 : stats.getAverage(),
+            stats.getAverage() == 0 ? 0.0 : stats.getAverage(),
             stats.getMin() == Double.POSITIVE_INFINITY ? 0.0 : stats.getMin(),
             stats.getMax() == Double.NEGATIVE_INFINITY ? 0.0 : stats.getMax()
         );
